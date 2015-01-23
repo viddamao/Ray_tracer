@@ -133,7 +133,7 @@ public class RayTracer {
         int halfStride = Math.max(1, stride / 2);
         for (int y = size.height - halfStride - 1; y >= halfStride; y -= stride) {
             for (int x = halfStride; x < size.width - halfStride; x += stride) {
-                Color c = renderPixel(x, y);
+                Color c = renderPixel(x, y).clamp(0, 1);
                 for (int py = -halfStride; py < halfStride; py++) {
                     for (int px = -halfStride; px < halfStride; px++) {
                         image.setPixelColor(c, px + x, py + y);
