@@ -2,12 +2,13 @@ package ray.surface;
 
 import ray.math.Point;
 import ray.math.Ray;
+import ray.math.SphereMath;
 import ray.math.Vector;
 
 /**
  * Represents a sphere as a center and a radius.
  *
- * @author YOUR NAME HERE
+ * @author Wei Chen
  */
 public class Sphere extends Surface {
     // These fields are read in from the input file.
@@ -25,14 +26,22 @@ public class Sphere extends Surface {
         this.radius = radius;
     }
 
-
     /**
      * @see Surface#getIntersection()
      */
     @Override
     public double[] getIntersection (Ray ray) {
         // TODO: return t values at which this ray intersects this surface
-        return new double[0];
+ 	
+		double dx = SphereMath.getDist(ray.getOrigin().x,ray.getDirection().x);
+		double dy = SphereMath.getDist(ray.getOrigin().y,ray.getDirection().y);
+		double dz = SphereMath.getDist(ray.getOrigin().z,ray.getDirection().z);
+
+		double a = SphereMath.getA(dx,dy,dz);
+		double b = SphereMath.getB(dx,dy,dz, ray.getOrigin(),this.center);
+		double c = SphereMath.getC(dx,dy,dz, ray.getOrigin(),this.center,radius);
+
+        return SphereMath.getT(a,b,c);
     }
 
     /**
@@ -41,6 +50,6 @@ public class Sphere extends Surface {
     @Override
     public Vector getNormal (Point pt) {
         // TODO: return vector representing this surface's normal at this point
-        return new Vector();
+        return SphereMath.getNormal(pt,this.center, this.radius);
     }
 }
