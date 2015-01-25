@@ -1,8 +1,11 @@
 package ray.shader;
 
+import ray.Light;
 import ray.Scene;
 import ray.math.Color;
 import ray.math.Point;
+import ray.math.SphereMath;
+import ray.math.Vector;
 import ray.surface.Surface;
 
 /**
@@ -39,6 +42,37 @@ public class Phong extends Lambertian {
     @Override
     public Color shade(Point intersectPt, Surface surface, Scene scene) {
 	// TODO: calculate the intensity of the light along this ray
-	return specularColor.add(super.shade(intersectPt, surface, scene));
+ 	Vector normal = surface.getNormal(intersectPt).normalize();//unit vector of normal
+    	Vector  vL = new Vector(),//vector of light
+    		vR= new Vector(),//reflection
+    		vE=new Vector();//Camera
+    	Color output=new Color(0,0,0);
+    	for(Light light :scene.getLights()){
+    		
+    		vL=light.position.sub(intersectPt);
+    		vL.normalize();
+    		
+    		vR=SphereMath.getReflection(vL, normal);
+    		vR.normalize();
+    		
+    		vE=scene.getCamera().viewPoint.sub(intersectPt);
+    		vE.normalize();
+    		
+    		output.x  += diffuseColor.x * light.color.x * Math.max(0, vL.dot(normal));
+    		output.y  += diffuseColor.y * light.color.y * Math.max(0, vL.dot(normal));
+    		output.z  += diffuseColor.z * light.color.z * Math.max(0, vL.dot(normal));
+    		
+    		
+    		
+    		output.x  += specularColor.x * light.color.x * Math.max(0, vE.dot(vR));
+    		output.y  += specularColor.y * light.color.y * Math.max(0, vE.dot(vR));
+    		output.z  += specularColor.z * light.color.z * Math.max(0, vE.dot(vR));
+    		
+    	}
+    	
+    	
+    	
+    	
+    	return output;
     }
 }
