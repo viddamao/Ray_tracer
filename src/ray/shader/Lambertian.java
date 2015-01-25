@@ -9,7 +9,6 @@ import ray.math.Point;
 import ray.math.Vector;
 import ray.surface.Surface;
 
-
 /**
  * A Lambertian material scatters light equally in all directions.
  *
@@ -21,32 +20,37 @@ public class Lambertian implements Shader {
     protected final Color diffuseColor = new Color(1, 1, 1);
 
     // PARSER METHODS
-    public void setDiffuseColor (Color inDiffuseColor) {
-        diffuseColor.set(inDiffuseColor);
+    public void setDiffuseColor(Color inDiffuseColor) {
+	diffuseColor.set(inDiffuseColor);
     }
 
     /**
      * @see Shader#shade()
      */
     @Override
-    public Color shade (Point intersectPt, Surface surface, Scene scene) {
-        // TODO: calculate the intensity of the light along this ray
-    	Color output = new Color(0,0,0);
-    	Vector normal = surface.getNormal(intersectPt).normalize();//unit vector of normal
-    	Vector l = new Vector();//vector of light
-    	for(Light light :scene.getLights()){
-    		
-    		l.x += light.position.x -intersectPt.x; 
-    		l.y += light.position.y - intersectPt.y;
-    		l.z += light.position.z-intersectPt.z;
-    		
-    		l.normalize();
-    		
-    		output.x += diffuseColor.x * light.color.x * Math.max(0, normal.dot(l));
-    		output.y += diffuseColor.y * light.color.y * Math.max(0, normal.dot(l));
-    		output.z += diffuseColor.z * light.color.z * Math.max(0, normal.dot(l));
-    	}
-    	
-        return output;
+    public Color shade(Point intersectPt, Surface surface, Scene scene) {
+	// TODO: calculate the intensity of the light along this ray
+	Color output = new Color(0, 0, 0);
+	Vector normal = surface.getNormal(intersectPt).normalize();// unit
+								   // vector of
+								   // normal
+	Vector l = new Vector();// vector of light
+	for (Light light : scene.getLights()) {
+
+	    l.x += light.position.x - intersectPt.x;
+	    l.y += light.position.y - intersectPt.y;
+	    l.z += light.position.z - intersectPt.z;
+
+	    l.normalize();
+
+	    output.x += diffuseColor.x * light.color.x
+		    * Math.max(0, normal.dot(l));
+	    output.y += diffuseColor.y * light.color.y
+		    * Math.max(0, normal.dot(l));
+	    output.z += diffuseColor.z * light.color.z
+		    * Math.max(0, normal.dot(l));
+	}
+
+	return output;
     }
 }

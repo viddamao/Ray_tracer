@@ -12,34 +12,33 @@ public class Triangle extends Surface {
     protected final Point c = new Point();
 
     // PARSER METHODS
-    public void setA (Point pt) {
-        a.set(pt);
+    public void setA(Point pt) {
+	a.set(pt);
     }
 
-    public void setB (Point pt) {
-        b.set(pt);
+    public void setB(Point pt) {
+	b.set(pt);
     }
 
-    public void setC (Point pt) {
-        c.set(pt);
+    public void setC(Point pt) {
+	c.set(pt);
     }
-
 
     /**
      * @see Surface#getIntersection()
      */
     @Override
-    public double[] getIntersection (Ray ray) {
-        // TODO: return t values at which this ray intersects this surface
-        return new double[0];
+    public double[] getIntersection(Ray ray) {
+	// TODO: return t values at which this ray intersects this surface
+	return new double[0];
     }
 
     /**
      * @see Surface#getNormal()
      */
     @Override
-    public Vector getNormal (Point point) {
-        // TODO: return vector representing this surface's normal at this point
-        return new Vector();
+    public Vector getNormal(Point point) {
+	// TODO: return vector representing this surface's normal at this point
+	return new Vector();
     }
 }

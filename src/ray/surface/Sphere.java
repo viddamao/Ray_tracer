@@ -18,38 +18,39 @@ public class Sphere extends Surface {
     protected double radius = 1.0;
 
     // PARSER METHODS
-    public void setCenter (Point center) {
-        this.center.set(center);
+    public void setCenter(Point center) {
+	this.center.set(center);
     }
 
-    public void setRadius (double radius) {
-        this.radius = radius;
+    public void setRadius(double radius) {
+	this.radius = radius;
     }
 
     /**
      * @see Surface#getIntersection()
      */
     @Override
-    public double[] getIntersection (Ray ray) {
-        // TODO: return t values at which this ray intersects this surface
- 	
-		double dx = SphereMath.getDist(ray.getOrigin().x,ray.getDirection().x);
-		double dy = SphereMath.getDist(ray.getOrigin().y,ray.getDirection().y);
-		double dz = SphereMath.getDist(ray.getOrigin().z,ray.getDirection().z);
+    public double[] getIntersection(Ray ray) {
+	// TODO: return t values at which this ray intersects this surface
 
-		double a = SphereMath.getA(dx,dy,dz);
-		double b = SphereMath.getB(dx,dy,dz, ray.getOrigin(),this.center);
-		double c = SphereMath.getC(dx,dy,dz, ray.getOrigin(),this.center,radius);
+	double dx = SphereMath.getDist(ray.getOrigin().x, ray.getDirection().x);
+	double dy = SphereMath.getDist(ray.getOrigin().y, ray.getDirection().y);
+	double dz = SphereMath.getDist(ray.getOrigin().z, ray.getDirection().z);
 
-        return SphereMath.getT(a,b,c);
+	double a = SphereMath.getA(dx, dy, dz);
+	double b = SphereMath.getB(dx, dy, dz, ray.getOrigin(), this.center);
+	double c = SphereMath.getC(dx, dy, dz, ray.getOrigin(), this.center,
+		radius);
+
+	return SphereMath.getT(a, b, c);
     }
 
     /**
      * @see Surface#getNormal()
      */
     @Override
-    public Vector getNormal (Point pt) {
-        // TODO: return vector representing this surface's normal at this point
-        return SphereMath.getNormal(pt,this.center, this.radius);
+    public Vector getNormal(Point pt) {
+	// TODO: return vector representing this surface's normal at this point
+	return SphereMath.getNormal(pt, this.center, this.radius);
     }
 }

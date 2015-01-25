@@ -21,9 +21,12 @@ public interface Shader {
     /**
      * Returns color of the given point on the given surface in the scene.
      *
-     * @param intersectPt point on the surface where a ray intersected
-     * @param surface surface for which the color is being calculated 
-     * @param scene contains all the lights and other surfaces available
+     * @param intersectPt
+     *            point on the surface where a ray intersected
+     * @param surface
+     *            surface for which the color is being calculated
+     * @param scene
+     *            contains all the lights and other surfaces available
      */
-    public Color shade (Point intersectPt, Surface surface, Scene scene);
+    public Color shade(Point intersectPt, Surface surface, Scene scene);
 }

@@ -10,19 +10,20 @@ import ray.RayTracer;
 public abstract class Command {
     private String myName;
 
-    public Command (String name) {
-        myName = name;
+    public Command(String name) {
+	myName = name;
     }
 
     /**
-     * Returns the name of this command (displayed on the button used to activate it)
+     * Returns the name of this command (displayed on the button used to
+     * activate it)
      */
-    public String getName () {
-        return myName;
+    public String getName() {
+	return myName;
     }
 
     /**
      * Subclasses determine how to update the given Scene
      */
-    abstract public void execute (RayTracer target);
+    abstract public void execute(RayTracer target);
 }

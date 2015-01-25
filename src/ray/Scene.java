@@ -26,66 +26,66 @@ public class Scene {
     /**
      * Create an empty scene.
      */
-    public Scene () {
-        lights = new ArrayList<>();
-        surfaces = new ArrayList<>();
-        shaders = new ArrayList<>();
+    public Scene() {
+	lights = new ArrayList<>();
+	surfaces = new ArrayList<>();
+	shaders = new ArrayList<>();
     }
 
     // PARSER METHODS
     /**
      * Set the scene's camera.
      */
-    public void setCamera (Camera camera) {
-        this.camera = camera;
+    public void setCamera(Camera camera) {
+	this.camera = camera;
     }
 
     /**
      * Add the light to this scene.
      */
-    public void addLight (Light toAdd) {
-        lights.add(toAdd);
+    public void addLight(Light toAdd) {
+	lights.add(toAdd);
     }
 
     /**
      * Get the scene's lights.
      */
-    public List<Light> getLights () {
-        return lights;
+    public List<Light> getLights() {
+	return lights;
     }
 
     /**
      * Add the surface to this scene.
      */
-    public void addSurface (Surface toAdd) {
-        surfaces.add(toAdd);
+    public void addSurface(Surface toAdd) {
+	surfaces.add(toAdd);
     }
 
     /**
      * Add the shader to this scene.
      */
-    public void addShader (Shader toAdd) {
-        shaders.add(toAdd);
+    public void addShader(Shader toAdd) {
+	shaders.add(toAdd);
     }
 
     /**
      * Get the scene's camera.
      */
-    public Camera getCamera () {
-        return camera;
+    public Camera getCamera() {
+	return camera;
     }
 
     /**
      * Get the scene's surfaces.
      */
-    public List<Surface> getSurfaces () {
-        return surfaces;
+    public List<Surface> getSurfaces() {
+	return surfaces;
     }
 
     /**
      * Set up scene for rendering.
      */
-    public void initialize () {
-        camera.initialize();
+    public void initialize() {
+	camera.initialize();
     }
 }

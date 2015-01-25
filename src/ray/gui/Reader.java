@@ -12,18 +12,18 @@ import ray.RayTracer;
  * @author rcd
  */
 public class Reader extends Command {
-    private static final JFileChooser ourChooser = 
-        new JFileChooser(System.getProperties().getProperty("user.dir") + File.separator + "data");
+    private static final JFileChooser ourChooser = new JFileChooser(System
+	    .getProperties().getProperty("user.dir") + File.separator + "data");
 
-    public Reader () {
-        super("Open Scene");
+    public Reader() {
+	super("Open Scene");
     }
 
     @Override
-    public void execute (RayTracer tracer) {
-        int response = ourChooser.showOpenDialog(null);
-        if (response == JFileChooser.APPROVE_OPTION) {
-            tracer.read(ourChooser.getSelectedFile());
-        }
+    public void execute(RayTracer tracer) {
+	int response = ourChooser.showOpenDialog(null);
+	if (response == JFileChooser.APPROVE_OPTION) {
+	    tracer.read(ourChooser.getSelectedFile());
+	}
     }
 }

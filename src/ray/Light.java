@@ -4,7 +4,8 @@ import ray.math.Color;
 import ray.math.Point;
 
 /**
- * A simplistic point light which is infinitely small and emits constant power in all directions. 
+ * A simplistic point light which is infinitely small and emits constant power
+ * in all directions.
  * 
  * This is a useful idealization of a small light emitter.
  *
@@ -18,11 +19,11 @@ public class Light {
     public final Color color = new Color(1, 1, 1);
 
     // PARSER METHODS
-    public void setPosition (Point position) {
-        this.position.set(position);
+    public void setPosition(Point position) {
+	this.position.set(position);
     }
 
-    public void setColor (Color intensity) {
-        color.set(intensity);
+    public void setColor(Color intensity) {
+	color.set(intensity);
     }
 }
