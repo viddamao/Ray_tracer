@@ -57,6 +57,7 @@ public class SphereMath {
 		double p = plusCal(a, b, c);
 		double m = minusCal(a, b, c);
 
+		
 		if (p < 0 && m < 0)
 			return new double[0]; // if both neg
 

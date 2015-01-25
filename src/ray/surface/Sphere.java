@@ -33,9 +33,9 @@ public class Sphere extends Surface {
 	public double[] getIntersection(Ray ray) {
 		// TODO: return t values at which this ray intersects this surface
 
-		double dx = SphereMath.getDist(ray.getOrigin().x, ray.getDirection().x);
-		double dy = SphereMath.getDist(ray.getOrigin().y, ray.getDirection().y);
-		double dz = SphereMath.getDist(ray.getOrigin().z, ray.getDirection().z);
+		double dx = ray.getDirection().x;
+		double dy = ray.getDirection().y;
+		double dz = ray.getDirection().z;
 
 		double a = SphereMath.getA(dx, dy, dz);
 		double b = SphereMath.getB(dx, dy, dz, ray.getOrigin(), this.center);
