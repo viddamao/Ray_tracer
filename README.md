@@ -15,6 +15,15 @@ The datafiles are just those provided as examples.
 
 For the extra-credit we did shadows and reflection.
 
+Addition files created: 
+
+SphereMath.java
+
+TriangleMath.java
+
+Glazed.java
+
+
 
 
 
