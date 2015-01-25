@@ -31,22 +31,23 @@ public class Lambertian implements Shader {
     @Override
     public Color shade (Point intersectPt, Surface surface, Scene scene) {
         // TODO: calculate the intensity of the light along this ray
-    	Color output = new Color(0,0,0);
+//    	Color output = new Color(0,0,0);
     	Vector normal = surface.getNormal(intersectPt).normalize();//unit vector of normal
     	Vector l = new Vector();//vector of light
     	for(Light light :scene.getLights()){
     		
-    		l.x += light.position.x -intersectPt.x; 
+    		l.x += light.position.x - intersectPt.x; 
     		l.y += light.position.y - intersectPt.y;
-    		l.z += light.position.z-intersectPt.z;
+    		l.z += light.position.z - intersectPt.z;
     		
     		l.normalize();
     		
-    		output.x += diffuseColor.x * light.color.x * Math.max(0, normal.dot(l));
-    		output.y += diffuseColor.y * light.color.y * Math.max(0, normal.dot(l));
-    		output.z += diffuseColor.z * light.color.z * Math.max(0, normal.dot(l));
+    		diffuseColor.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
+    		diffuseColor.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
+    		diffuseColor.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
     	}
     	
-        return output;
+//        return diffuseColor.clamp(0, 1);
+    	return diffuseColor;
     }
 }
