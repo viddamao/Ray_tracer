@@ -10,18 +10,18 @@ import ray.RayTracer;
  * @author rcd
  */
 public class Writer extends Command {
-    private static final JFileChooser ourChooser = new JFileChooser(System
-	    .getProperties().getProperty("user.dir"));
+	private static final JFileChooser ourChooser = new JFileChooser(System
+			.getProperties().getProperty("user.dir"));
 
-    public Writer() {
-	super("Save Image");
-    }
-
-    @Override
-    public void execute(RayTracer tracer) {
-	int response = ourChooser.showSaveDialog(null);
-	if (response == JFileChooser.APPROVE_OPTION) {
-	    tracer.write(ourChooser.getSelectedFile().getPath());
+	public Writer() {
+		super("Save Image");
 	}
-    }
+
+	@Override
+	public void execute(RayTracer tracer) {
+		int response = ourChooser.showSaveDialog(null);
+		if (response == JFileChooser.APPROVE_OPTION) {
+			tracer.write(ourChooser.getSelectedFile().getPath());
+		}
+	}
 }

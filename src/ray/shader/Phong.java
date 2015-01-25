@@ -18,61 +18,61 @@ import ray.surface.Surface;
  * @author YOUR NAME HERE
  */
 public class Phong extends Lambertian {
-    // These fields are read in from the input file.
-    /** The color of the specular reflection. */
-    protected final Color specularColor = new Color(1, 1, 1);
-    /** The exponent controlling the sharpness of the specular reflection. */
-    protected double exponent = 1.0;
+	// These fields are read in from the input file.
+	/** The color of the specular reflection. */
+	protected final Color specularColor = new Color(1, 1, 1);
+	/** The exponent controlling the sharpness of the specular reflection. */
+	protected double exponent = 1.0;
 
-    // PARSER METHODS
-    public void setSpecularColor(Color specularColor) {
-	this.specularColor.set(specularColor);
-    }
+	// PARSER METHODS
+	public void setSpecularColor(Color specularColor) {
+		this.specularColor.set(specularColor);
+	}
 
-    public void setExponent(double exponent) {
-	this.exponent = exponent;
-    }
+	public void setExponent(double exponent) {
+		this.exponent = exponent;
+	}
 
-    /**
-     * @see Shader#shade()
-     * 
-     *      Don't forget to call super.shade() to include that color component
-     *      as well.
-     */
-    @Override
-    public Color shade(Point intersectPt, Surface surface, Scene scene) {
-	// TODO: calculate the intensity of the light along this ray
- 	Vector normal = surface.getNormal(intersectPt).normalize();//unit vector of normal
-    	Vector  vL = new Vector(),//vector of light
-    		vR= new Vector(),//reflection
-    		vE=new Vector();//Camera
-    	Color output=new Color(0,0,0);
-    	for(Light light :scene.getLights()){
-    		
-    		vL=light.position.sub(intersectPt);
-    		vL.normalize();
-    		
-    		vR=SphereMath.getReflection(vL, normal);
-    		vR.normalize();
-    		
-    		vE=scene.getCamera().viewPoint.sub(intersectPt);
-    		vE.normalize();
-    		
-    		output.x  += diffuseColor.x * light.color.x * Math.max(0, vL.dot(normal));
-    		output.y  += diffuseColor.y * light.color.y * Math.max(0, vL.dot(normal));
-    		output.z  += diffuseColor.z * light.color.z * Math.max(0, vL.dot(normal));
-    		
-    		
-    		
-    		output.x  += specularColor.x * light.color.x * Math.max(0, vE.dot(vR));
-    		output.y  += specularColor.y * light.color.y * Math.max(0, vE.dot(vR));
-    		output.z  += specularColor.z * light.color.z * Math.max(0, vE.dot(vR));
-    		
-    	}
-    	
-    	
-    	
-    	
-    	return output;
-    }
+	/**
+	 * @see Shader#shade()
+	 * 
+	 *      Don't forget to call super.shade() to include that color component
+	 *      as well.
+	 */
+	@Override
+	public Color shade(Point intersectPt, Surface surface, Scene scene) {
+		// TODO: calculate the intensity of the light along this ray
+		Vector normal = surface.getNormal(intersectPt).normalize();//unit vector of normal
+		Vector  vL = new Vector(),//vector of light
+				vR= new Vector(),//reflection
+				vE=new Vector();//Camera
+		Color output=new Color(0,0,0);
+		for(Light light :scene.getLights()){
+
+			vL=light.position.sub(intersectPt);
+			vL.normalize();
+
+			vR=SphereMath.getReflection(vL, normal);
+			vR.normalize();
+
+			vE=scene.getCamera().viewPoint.sub(intersectPt);
+			vE.normalize();
+
+			output.x  += diffuseColor.x * light.color.x * Math.max(0, vL.dot(normal));
+			output.y  += diffuseColor.y * light.color.y * Math.max(0, vL.dot(normal));
+			output.z  += diffuseColor.z * light.color.z * Math.max(0, vL.dot(normal));
+
+
+
+			output.x  += specularColor.x * light.color.x * Math.max(0, vE.dot(vR));
+			output.y  += specularColor.y * light.color.y * Math.max(0, vE.dot(vR));
+			output.z  += specularColor.z * light.color.z * Math.max(0, vE.dot(vR));
+
+		}
+
+
+
+
+		return output;
+	}
 }
