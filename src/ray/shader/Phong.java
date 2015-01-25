@@ -64,13 +64,11 @@ public class Phong extends Lambertian {
 
 
 
-			output.x  += specularColor.x * light.color.x * Math.max(0, vE.dot(vR));
-			output.y  += specularColor.y * light.color.y * Math.max(0, vE.dot(vR));
-			output.z  += specularColor.z * light.color.z * Math.max(0, vE.dot(vR));
+			output.x  += specularColor.x * light.color.x * Math.pow((Math.max(0, vE.dot(vR))),exponent);
+			output.y  += specularColor.y * light.color.y * Math.pow((Math.max(0, vE.dot(vR))),exponent);
+			output.z  += specularColor.z * light.color.z * Math.pow((Math.max(0, vE.dot(vR))),exponent);
 
 		}
-
-
 
 
 		return output;

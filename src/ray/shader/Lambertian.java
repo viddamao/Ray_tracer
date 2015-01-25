@@ -34,6 +34,8 @@ public class Lambertian implements Shader {
 		//    	Color output = new Color(0,0,0);
 		Vector normal = surface.getNormal(intersectPt).normalize();//unit vector of normal
 		Vector l = new Vector();//vector of light
+		Color output=new Color(0,0,0);
+		
 		for(Light light :scene.getLights()){
 
 			l.x += light.position.x - intersectPt.x; 
@@ -42,12 +44,12 @@ public class Lambertian implements Shader {
 
 			l.normalize();
 
-			diffuseColor.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
-			diffuseColor.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
-			diffuseColor.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
+			output.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
+			output.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
+			output.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
 		}
 
 		//        return diffuseColor.clamp(0, 1);
-		return diffuseColor;
+		return output;
 	}
 }
