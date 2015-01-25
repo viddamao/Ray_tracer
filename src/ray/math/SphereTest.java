@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import ray.surface.Sphere;
 
-public class sphereTest {
+public class SphereTest {
 
     @Test
     public void test() {
