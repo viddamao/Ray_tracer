@@ -12,18 +12,18 @@ import ray.math.Point;
  * @author ags
  */
 public class Light {
-    // These fields are read in from the input file.
-    /** Where the light is located in space. */
-    public final Point position = new Point();
-    /** Color of the light. */
-    public final Color color = new Color(1, 1, 1);
+	// These fields are read in from the input file.
+	/** Where the light is located in space. */
+	public final Point position = new Point();
+	/** Color of the light. */
+	public final Color color = new Color(1, 1, 1);
 
-    // PARSER METHODS
-    public void setPosition(Point position) {
-	this.position.set(position);
-    }
+	// PARSER METHODS
+	public void setPosition(Point position) {
+		this.position.set(position);
+	}
 
-    public void setColor(Color intensity) {
-	color.set(intensity);
-    }
+	public void setColor(Color intensity) {
+		color.set(intensity);
+	}
 }

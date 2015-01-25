@@ -78,314 +78,314 @@ import ray.math.Tuple;
  * @author arbree
  */
 public class Parser {
-    /** Java document builder used to parse XML * */
-    private static DocumentBuilder db;
-    /** Map of references to their names * */
-    public static HashMap<String, Object> references = new HashMap<String, Object>();
+	/** Java document builder used to parse XML * */
+	private static DocumentBuilder db;
+	/** Map of references to their names * */
+	public static HashMap<String, Object> references = new HashMap<String, Object>();
 
-    /** Creates a new Parser. */
-    public Parser() {
-	try {
-	    db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-	} catch (Exception e) {
-	    throw new Error("Error instantiating the parser.");
-	}
-    }
-
-    /**
-     * Parses a given file to generate an object of the given class.
-     *
-     * @param filename
-     *            the name of the XML file to parse
-     * @param c
-     *            the class of the object to parse
-     * @return a new object of the given class
-     */
-    public Object parse(File file, Class<?> c) {
-	try {
-	    Document doc = db.parse(file);
-	    Element root = doc.getDocumentElement();
-	    return parseObject(c, root);
-	} catch (Exception e) {
-	    System.out.println("Exception occurred while parsing: "
-		    + file.getName());
-	    e.printStackTrace();
-	    return null;
-	}
-    }
-
-    /**
-     * Parses text and generates either an Integer or a Double object, depending
-     * on given class.
-     *
-     * @param c
-     *            the class to parse the string as
-     * @param text
-     *            the text to parse
-     * @return a new object of the given type
-     */
-    private Object parsePrimitive(Class<?> c, String text) {
-	if (c == Integer.TYPE) {
-	    return new Integer(text);
-	} else if (c == Double.TYPE) {
-	    return new Double(text);
-	} else {
-	    throw new Error("Cannot parse primitive of type " + c);
-	}
-    }
-
-    /**
-     * Parse an array.
-     *
-     * @param componentType
-     *            the type of each component in the array
-     * @param text
-     *            the text in the node to be parsed
-     * @return an ArrayList of temporary values used to create the array at the
-     *         return point
-     */
-    private ArrayList<Object> parseArray(Class<?> componentType, String text) {
-	ArrayList<Object> result = new ArrayList<Object>();
-	Scanner scan = new Scanner(text);
-	while (scan.hasNext()) {
-	    result.add(parsePrimitive(componentType, scan.next()));
-	}
-	scan.close();
-	return result;
-    }
-
-    /**
-     * Parse some special types of objects
-     *
-     * @param c
-     *            the class type to parse
-     * @param text
-     *            the text to interpret as an object
-     * @return the object parsed
-     */
-    private Object parseObject(Class<?> c, String text) {
-	if (c == String.class) {
-	    return text;
-	} else if (c == Integer.class) {
-	    return new Integer(text);
-	} else if (c == Double.class) {
-	    return new Double(text);
-	} else if ((c.isArray() && c.getComponentType().isPrimitive())) {
-	    ArrayList<Object> tempArray = parseArray(c.getComponentType(), text);
-	    Object result = Array.newInstance(c.getComponentType(),
-		    tempArray.size());
-	    for (int i = 0; i < tempArray.size(); i++) {
-		Array.set(result, i, tempArray.get(i));
-	    }
-	    return result;
-	} else if (Tuple.class.isAssignableFrom(c)) {
-	    try {
-		ArrayList<Object> tempArray = parseArray(Double.TYPE, text);
-		if (tempArray.size() != 3) {
-		    throw new Error("Tuple is not of length 3 ("
-			    + tempArray.size() + ")");
-		}
-		Tuple result = (Tuple) c.newInstance();
-		result.x = ((Double) tempArray.get(0)).doubleValue();
-		result.y = ((Double) tempArray.get(1)).doubleValue();
-		result.z = ((Double) tempArray.get(2)).doubleValue();
-		return result;
-	    } catch (Exception e) {
-		throw new Error("Error instantiating object of class: "
-			+ c.getName());
-	    }
-	} else {
-	    throw new Error("Cannot parse type: " + c);
-	}
-    }
-
-    /**
-     * Return the Method object representing the string methodName in Class c.
-     * Return null if no such method if found.
-     *
-     * @param c
-     *            the class to find a method in
-     * @param methodName
-     *            the name of the method to find
-     * @return the Method object if a method is found, null otherwise
-     */
-    private Method findMethod(Class<?> c, String methodName) {
-	for (Method m : c.getMethods()) {
-	    if (methodName.equalsIgnoreCase(m.getName())) {
-		return m;
-	    }
-	}
-	return null;
-    }
-
-    /**
-     * Parse an object node. The node is assumed to be of Class c and is
-     * represented by Node n.
-     *
-     * @param c
-     *            Class type to read from node n
-     * @param n
-     *            the node to parse into an instance of c
-     * @return the object read
-     */
-    private Object parseObject(Class<?> c, Node n) {
-	Object resultingObject = null;
-	NamedNodeMap attributes = n.getAttributes();
-	Node typeAttribute = attributes.getNamedItem("type");
-	Node nameAttribute = attributes.getNamedItem("name");
-	Node refAttribute = attributes.getNamedItem("ref");
-	if (typeAttribute != null) {
-	    String className = typeAttribute.getNodeValue();
-	    try {
-		Class<?> possibleClass;
-		// Try to look up class: if it fails, try to look in package of
-		// given base type
+	/** Creates a new Parser. */
+	public Parser() {
 		try {
-		    possibleClass = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-		    possibleClass = Class.forName(c.getPackage().getName()
-			    + "." + className);
-		}
-		if (c.isAssignableFrom(possibleClass)) {
-		    c = possibleClass; // Set current active class to user
-				       // specified type
-		} else {
-		    throw new Error("Type " + className
-			    + " does not extend or implement " + c.getName());
-		}
-	    } catch (ClassNotFoundException e) {
-		throw new Error("Class could not be found: " + className);
-	    }
-	}
-	// If node specifies type, check if it is assignable to current output
-	// type
-	if (typeAttribute != null) {
-	    String className = typeAttribute.getNodeValue();
-	    try {
-		Class<?> possibleClass;
-		// Try to look up class; if fail, try looking in package of
-		// given base type
-		try {
-		    possibleClass = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-		    possibleClass = Class.forName(c.getPackage().getName()
-			    + "." + className);
-		}
-		if (c.isAssignableFrom(possibleClass)) {
-		    c = possibleClass; // Set current active class to user
-				       // specified type
-		} else {
-		    throw new Error("Type " + className
-			    + " does not extend or implement " + c.getName());
-		}
-	    } catch (ClassNotFoundException e) {
-		throw new Error("Class could not be found: " + className);
-	    }
-	}
-	// Check that our current type is valid
-	if (c.isArray() && !c.getComponentType().isPrimitive()) {
-	    throw new Error("Cannot parse arrays of non-primitive types");
-	}
-	// Get the sub elements of this node
-	NodeList children = n.getChildNodes();
-	// If the object is a reference, just return the value referenced
-	if (refAttribute != null) {
-	    String name = refAttribute.getNodeValue();
-	    resultingObject = references.get(name);
-	    if (resultingObject == null) {
-		throw new Error("Unresolved reference: " + name);
-	    }
-	}
-	// Check for certain special classes of the current node
-	else if ((c.isArray() && c.getComponentType().isPrimitive())
-		|| c == String.class || c == Integer.class || c == Double.class
-		|| c == Color.class || Tuple.class.isAssignableFrom(c)
-		|| Image.class.isAssignableFrom(c)) {
-
-	    // Interpret the text values of all children nodes as objects
-	    for (int i = 0; i < children.getLength(); i++) {
-		Node child = children.item(i);
-		if (child.getNodeType() == Node.TEXT_NODE) {
-		    resultingObject = parseObject(c, child.getNodeValue());
-		} else {
-		    throw new Error(
-			    "Found a non-text node while trying to parse a "
-				    + c.getName());
-		}
-	    }
-	}
-	// Otherwise the node represents a general object
-	else {
-	    // Create one!
-	    try {
-		resultingObject = c.newInstance();
-	    } catch (Exception e) {
-		throw new Error("Error instantiating object of class: "
-			+ c.getName());
-	    }
-	    // For each child
-	    for (int i = 0; i < children.getLength(); i++) {
-		Node child = children.item(i);
-		// Skip non-element nodes
-		if (child.getNodeType() != Node.ELEMENT_NODE) {
-		    continue;
-		}
-		// Find the method to use for adding
-		Method foundMethod = null;
-		String childName = child.getNodeName();
-		// Check setXXX
-		foundMethod = findMethod(c, "set" + childName);
-		// If can't find setXXX method, look for addXXX method instead
-		if (foundMethod == null) {
-		    foundMethod = findMethod(c, "add" + childName);
-		}
-		// It is an error if no method was found
-		if (foundMethod == null) {
-		    throw new Error("Could not find a method to use to add "
-			    + childName + " to the class type " + c.getName()
-			    + ".");
-		}
-		// Check that the method has the right number of parameters
-		Class<?>[] parameterTypes = foundMethod.getParameterTypes();
-		if (parameterTypes.length != 1) {
-		    throw new Error("Method " + foundMethod.getName()
-			    + " must take exactly one parameter.");
-		}
-		// If the type is primitive, switch to corresponding Object type
-		// to parse. Method invocation will automatically take care of
-		// converting Object types back into primitives.
-		Class<?> parameterType = parameterTypes[0];
-		if (parameterType.isPrimitive()) {
-		    if (parameterType == Integer.TYPE) {
-			parameterType = Integer.class;
-		    } else if (parameterType == Float.TYPE) {
-			parameterType = Float.class;
-		    } else if (parameterType == Double.TYPE) {
-			parameterType = Double.class;
-		    } else {
-			throw new Error("Cannot parse primitives of type "
-				+ parameterType);
-		    }
-		}
-		// Recursively parse value of child element
-		Object childValue = parseObject(parameterType, child);
-		// Call the setter method with the parsed value;
-		try {
-		    // Invoke the setter method
-		    foundMethod.invoke(resultingObject,
-			    new Object[] { childValue });
+			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (Exception e) {
-		    System.err.println("Error invoking the method "
-			    + foundMethod.getName() + ".");
-		    e.printStackTrace();
+			throw new Error("Error instantiating the parser.");
 		}
-	    }
 	}
-	// Place the object in the reference list
-	if (nameAttribute != null) {
-	    String name = nameAttribute.getNodeValue();
-	    references.put(name, resultingObject);
+
+	/**
+	 * Parses a given file to generate an object of the given class.
+	 *
+	 * @param filename
+	 *            the name of the XML file to parse
+	 * @param c
+	 *            the class of the object to parse
+	 * @return a new object of the given class
+	 */
+	public Object parse(File file, Class<?> c) {
+		try {
+			Document doc = db.parse(file);
+			Element root = doc.getDocumentElement();
+			return parseObject(c, root);
+		} catch (Exception e) {
+			System.out.println("Exception occurred while parsing: "
+					+ file.getName());
+			e.printStackTrace();
+			return null;
+		}
 	}
-	return resultingObject;
-    }
+
+	/**
+	 * Parses text and generates either an Integer or a Double object, depending
+	 * on given class.
+	 *
+	 * @param c
+	 *            the class to parse the string as
+	 * @param text
+	 *            the text to parse
+	 * @return a new object of the given type
+	 */
+	private Object parsePrimitive(Class<?> c, String text) {
+		if (c == Integer.TYPE) {
+			return new Integer(text);
+		} else if (c == Double.TYPE) {
+			return new Double(text);
+		} else {
+			throw new Error("Cannot parse primitive of type " + c);
+		}
+	}
+
+	/**
+	 * Parse an array.
+	 *
+	 * @param componentType
+	 *            the type of each component in the array
+	 * @param text
+	 *            the text in the node to be parsed
+	 * @return an ArrayList of temporary values used to create the array at the
+	 *         return point
+	 */
+	private ArrayList<Object> parseArray(Class<?> componentType, String text) {
+		ArrayList<Object> result = new ArrayList<Object>();
+		Scanner scan = new Scanner(text);
+		while (scan.hasNext()) {
+			result.add(parsePrimitive(componentType, scan.next()));
+		}
+		scan.close();
+		return result;
+	}
+
+	/**
+	 * Parse some special types of objects
+	 *
+	 * @param c
+	 *            the class type to parse
+	 * @param text
+	 *            the text to interpret as an object
+	 * @return the object parsed
+	 */
+	private Object parseObject(Class<?> c, String text) {
+		if (c == String.class) {
+			return text;
+		} else if (c == Integer.class) {
+			return new Integer(text);
+		} else if (c == Double.class) {
+			return new Double(text);
+		} else if ((c.isArray() && c.getComponentType().isPrimitive())) {
+			ArrayList<Object> tempArray = parseArray(c.getComponentType(), text);
+			Object result = Array.newInstance(c.getComponentType(),
+					tempArray.size());
+			for (int i = 0; i < tempArray.size(); i++) {
+				Array.set(result, i, tempArray.get(i));
+			}
+			return result;
+		} else if (Tuple.class.isAssignableFrom(c)) {
+			try {
+				ArrayList<Object> tempArray = parseArray(Double.TYPE, text);
+				if (tempArray.size() != 3) {
+					throw new Error("Tuple is not of length 3 ("
+							+ tempArray.size() + ")");
+				}
+				Tuple result = (Tuple) c.newInstance();
+				result.x = ((Double) tempArray.get(0)).doubleValue();
+				result.y = ((Double) tempArray.get(1)).doubleValue();
+				result.z = ((Double) tempArray.get(2)).doubleValue();
+				return result;
+			} catch (Exception e) {
+				throw new Error("Error instantiating object of class: "
+						+ c.getName());
+			}
+		} else {
+			throw new Error("Cannot parse type: " + c);
+		}
+	}
+
+	/**
+	 * Return the Method object representing the string methodName in Class c.
+	 * Return null if no such method if found.
+	 *
+	 * @param c
+	 *            the class to find a method in
+	 * @param methodName
+	 *            the name of the method to find
+	 * @return the Method object if a method is found, null otherwise
+	 */
+	private Method findMethod(Class<?> c, String methodName) {
+		for (Method m : c.getMethods()) {
+			if (methodName.equalsIgnoreCase(m.getName())) {
+				return m;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Parse an object node. The node is assumed to be of Class c and is
+	 * represented by Node n.
+	 *
+	 * @param c
+	 *            Class type to read from node n
+	 * @param n
+	 *            the node to parse into an instance of c
+	 * @return the object read
+	 */
+	private Object parseObject(Class<?> c, Node n) {
+		Object resultingObject = null;
+		NamedNodeMap attributes = n.getAttributes();
+		Node typeAttribute = attributes.getNamedItem("type");
+		Node nameAttribute = attributes.getNamedItem("name");
+		Node refAttribute = attributes.getNamedItem("ref");
+		if (typeAttribute != null) {
+			String className = typeAttribute.getNodeValue();
+			try {
+				Class<?> possibleClass;
+				// Try to look up class: if it fails, try to look in package of
+				// given base type
+				try {
+					possibleClass = Class.forName(className);
+				} catch (ClassNotFoundException e) {
+					possibleClass = Class.forName(c.getPackage().getName()
+							+ "." + className);
+				}
+				if (c.isAssignableFrom(possibleClass)) {
+					c = possibleClass; // Set current active class to user
+					// specified type
+				} else {
+					throw new Error("Type " + className
+							+ " does not extend or implement " + c.getName());
+				}
+			} catch (ClassNotFoundException e) {
+				throw new Error("Class could not be found: " + className);
+			}
+		}
+		// If node specifies type, check if it is assignable to current output
+		// type
+		if (typeAttribute != null) {
+			String className = typeAttribute.getNodeValue();
+			try {
+				Class<?> possibleClass;
+				// Try to look up class; if fail, try looking in package of
+				// given base type
+				try {
+					possibleClass = Class.forName(className);
+				} catch (ClassNotFoundException e) {
+					possibleClass = Class.forName(c.getPackage().getName()
+							+ "." + className);
+				}
+				if (c.isAssignableFrom(possibleClass)) {
+					c = possibleClass; // Set current active class to user
+					// specified type
+				} else {
+					throw new Error("Type " + className
+							+ " does not extend or implement " + c.getName());
+				}
+			} catch (ClassNotFoundException e) {
+				throw new Error("Class could not be found: " + className);
+			}
+		}
+		// Check that our current type is valid
+		if (c.isArray() && !c.getComponentType().isPrimitive()) {
+			throw new Error("Cannot parse arrays of non-primitive types");
+		}
+		// Get the sub elements of this node
+		NodeList children = n.getChildNodes();
+		// If the object is a reference, just return the value referenced
+		if (refAttribute != null) {
+			String name = refAttribute.getNodeValue();
+			resultingObject = references.get(name);
+			if (resultingObject == null) {
+				throw new Error("Unresolved reference: " + name);
+			}
+		}
+		// Check for certain special classes of the current node
+		else if ((c.isArray() && c.getComponentType().isPrimitive())
+				|| c == String.class || c == Integer.class || c == Double.class
+				|| c == Color.class || Tuple.class.isAssignableFrom(c)
+				|| Image.class.isAssignableFrom(c)) {
+
+			// Interpret the text values of all children nodes as objects
+			for (int i = 0; i < children.getLength(); i++) {
+				Node child = children.item(i);
+				if (child.getNodeType() == Node.TEXT_NODE) {
+					resultingObject = parseObject(c, child.getNodeValue());
+				} else {
+					throw new Error(
+							"Found a non-text node while trying to parse a "
+									+ c.getName());
+				}
+			}
+		}
+		// Otherwise the node represents a general object
+		else {
+			// Create one!
+			try {
+				resultingObject = c.newInstance();
+			} catch (Exception e) {
+				throw new Error("Error instantiating object of class: "
+						+ c.getName());
+			}
+			// For each child
+			for (int i = 0; i < children.getLength(); i++) {
+				Node child = children.item(i);
+				// Skip non-element nodes
+				if (child.getNodeType() != Node.ELEMENT_NODE) {
+					continue;
+				}
+				// Find the method to use for adding
+				Method foundMethod = null;
+				String childName = child.getNodeName();
+				// Check setXXX
+				foundMethod = findMethod(c, "set" + childName);
+				// If can't find setXXX method, look for addXXX method instead
+				if (foundMethod == null) {
+					foundMethod = findMethod(c, "add" + childName);
+				}
+				// It is an error if no method was found
+				if (foundMethod == null) {
+					throw new Error("Could not find a method to use to add "
+							+ childName + " to the class type " + c.getName()
+							+ ".");
+				}
+				// Check that the method has the right number of parameters
+				Class<?>[] parameterTypes = foundMethod.getParameterTypes();
+				if (parameterTypes.length != 1) {
+					throw new Error("Method " + foundMethod.getName()
+							+ " must take exactly one parameter.");
+				}
+				// If the type is primitive, switch to corresponding Object type
+				// to parse. Method invocation will automatically take care of
+				// converting Object types back into primitives.
+				Class<?> parameterType = parameterTypes[0];
+				if (parameterType.isPrimitive()) {
+					if (parameterType == Integer.TYPE) {
+						parameterType = Integer.class;
+					} else if (parameterType == Float.TYPE) {
+						parameterType = Float.class;
+					} else if (parameterType == Double.TYPE) {
+						parameterType = Double.class;
+					} else {
+						throw new Error("Cannot parse primitives of type "
+								+ parameterType);
+					}
+				}
+				// Recursively parse value of child element
+				Object childValue = parseObject(parameterType, child);
+				// Call the setter method with the parsed value;
+				try {
+					// Invoke the setter method
+					foundMethod.invoke(resultingObject,
+							new Object[] { childValue });
+				} catch (Exception e) {
+					System.err.println("Error invoking the method "
+							+ foundMethod.getName() + ".");
+					e.printStackTrace();
+				}
+			}
+		}
+		// Place the object in the reference list
+		if (nameAttribute != null) {
+			String name = nameAttribute.getNodeValue();
+			references.put(name, resultingObject);
+		}
+		return resultingObject;
+	}
 }
