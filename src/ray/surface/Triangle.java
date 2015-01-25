@@ -1,7 +1,10 @@
 package ray.surface;
 
+import java.util.HashMap;
+
 import ray.math.Point;
 import ray.math.Ray;
+import ray.math.TriangleMath;
 import ray.math.Vector;
 
 public class Triangle extends Surface {
@@ -30,7 +33,29 @@ public class Triangle extends Surface {
 	@Override
 	public double[] getIntersection(Ray ray) {
 		// TODO: return t values at which this ray intersects this surface
-		return new double[0];
+		
+		HashMap<String,Double> map = TriangleMath.getMap(ray.getOrigin(), ray.getDirection(), 
+															this.a, this.b, this.c);
+		double m = TriangleMath.getM(map);
+		
+		if(m==0){
+			return new double[0];
+		}else{
+			double beta = TriangleMath.getBeta(map,m);
+			double gamma = TriangleMath.getGamma(map,m);
+			double t = TriangleMath.getT(map,m);
+
+			if(TriangleMath.checkInTriangle(beta,gamma)){
+				double[] tvals = new double[1];
+				tvals[0] = t;
+				return tvals;
+				
+			}else{
+				return new double[0];
+			}
+
+		}
+		
 	}
 
 	/**
@@ -39,6 +64,10 @@ public class Triangle extends Surface {
 	@Override
 	public Vector getNormal(Point point) {
 		// TODO: return vector representing this surface's normal at this point
-		return new Vector();
+		Vector a = new Vector(this.a);
+		Vector b = new Vector(this.b);
+		Vector c = new Vector(this.c);
+		
+		return (b.sub(a)).cross((b.sub(c)));
 	}
 }
