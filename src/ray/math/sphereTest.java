@@ -21,6 +21,12 @@ public class sphereTest {
 	assertEquals(c,1.4375,0.0001);
 	assertEquals(SphereMath.getT(a, b, c)[0],1.7217,0.01);
 	assertEquals(SphereMath.getT(a, b, c)[1],0.2783,0.01);
+	//Vector reflection test
+	Vector vL=new Vector(1,0,1),normal=new Vector(0,1,0);
+	assertEquals(SphereMath.getReflection(vL, normal).x,-1,0.001);
+	assertEquals(SphereMath.getReflection(vL, normal).y,0,0.001);
+	assertEquals(SphereMath.getReflection(vL, normal).z,-1,0.001);
+	
 	
     }
 

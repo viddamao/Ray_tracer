@@ -79,4 +79,9 @@ public class SphereMath {
 		return normal;
 	}
 	
+	public static Vector getReflection(Vector vL,Vector normal){
+	    return normal.scale(2 * vL.dot(normal)).sub(vL);
+	    
+	}
+	
 }
