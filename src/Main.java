@@ -11,15 +11,15 @@ import ray.gui.RayFrame;
  * @author rcd
  */
 public class Main {
-	public static final Dimension SIZE = new Dimension(600, 600);
-	public static final String TITLE = "Ray Tracer";
+    public static final Dimension SIZE = new Dimension(600, 600);
+    public static final String TITLE = "Ray Tracer";
 
-	public static void main(String[] args) {
-		RayFrame viewer = new RayFrame(TITLE, SIZE);
-		if (args.length == 0) {
-			viewer.setVisible(true);
-		} else {
-			viewer.renderToFile(new File(args[0]));
-		}
+    public static void main(String[] args) {
+	RayFrame viewer = new RayFrame(TITLE, SIZE);
+	if (args.length == 0) {
+	    viewer.setVisible(true);
+	} else {
+	    viewer.renderToFile(new File(args[0]));
 	}
+    }
 }

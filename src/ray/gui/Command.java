@@ -8,22 +8,22 @@ import ray.RayTracer;
  * @author rcd
  */
 public abstract class Command {
-	private String myName;
+    private String myName;
 
-	public Command(String name) {
-		myName = name;
-	}
+    public Command(String name) {
+	myName = name;
+    }
 
-	/**
-	 * Returns the name of this command (displayed on the button used to
-	 * activate it)
-	 */
-	public String getName() {
-		return myName;
-	}
+    /**
+     * Returns the name of this command (displayed on the button used to
+     * activate it)
+     */
+    public String getName() {
+	return myName;
+    }
 
-	/**
-	 * Subclasses determine how to update the given Scene
-	 */
-	abstract public void execute(RayTracer target);
+    /**
+     * Subclasses determine how to update the given Scene
+     */
+    abstract public void execute(RayTracer target);
 }

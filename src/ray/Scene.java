@@ -14,78 +14,78 @@ import ray.surface.Surface;
  * @author ags
  */
 public class Scene {
-	/** The camera for this scene. */
-	private Camera camera;
-	/** The list of lights for the scene. */
-	private List<Light> lights;
-	/** The list of surfaces for the scene. */
-	private List<Surface> surfaces;
-	/** The list of materials in the scene . */
-	private List<Shader> shaders;
+    /** The camera for this scene. */
+    private Camera camera;
+    /** The list of lights for the scene. */
+    private List<Light> lights;
+    /** The list of surfaces for the scene. */
+    private List<Surface> surfaces;
+    /** The list of materials in the scene . */
+    private List<Shader> shaders;
 
-	/**
-	 * Create an empty scene.
-	 */
-	public Scene() {
-		lights = new ArrayList<>();
-		surfaces = new ArrayList<>();
-		shaders = new ArrayList<>();
-	}
+    /**
+     * Create an empty scene.
+     */
+    public Scene() {
+	lights = new ArrayList<>();
+	surfaces = new ArrayList<>();
+	shaders = new ArrayList<>();
+    }
 
-	// PARSER METHODS
-	/**
-	 * Set the scene's camera.
-	 */
-	public void setCamera(Camera camera) {
-		this.camera = camera;
-	}
+    // PARSER METHODS
+    /**
+     * Set the scene's camera.
+     */
+    public void setCamera(Camera camera) {
+	this.camera = camera;
+    }
 
-	/**
-	 * Add the light to this scene.
-	 */
-	public void addLight(Light toAdd) {
-		lights.add(toAdd);
-	}
+    /**
+     * Add the light to this scene.
+     */
+    public void addLight(Light toAdd) {
+	lights.add(toAdd);
+    }
 
-	/**
-	 * Get the scene's lights.
-	 */
-	public List<Light> getLights() {
-		return lights;
-	}
+    /**
+     * Get the scene's lights.
+     */
+    public List<Light> getLights() {
+	return lights;
+    }
 
-	/**
-	 * Add the surface to this scene.
-	 */
-	public void addSurface(Surface toAdd) {
-		surfaces.add(toAdd);
-	}
+    /**
+     * Add the surface to this scene.
+     */
+    public void addSurface(Surface toAdd) {
+	surfaces.add(toAdd);
+    }
 
-	/**
-	 * Add the shader to this scene.
-	 */
-	public void addShader(Shader toAdd) {
-		shaders.add(toAdd);
-	}
+    /**
+     * Add the shader to this scene.
+     */
+    public void addShader(Shader toAdd) {
+	shaders.add(toAdd);
+    }
 
-	/**
-	 * Get the scene's camera.
-	 */
-	public Camera getCamera() {
-		return camera;
-	}
+    /**
+     * Get the scene's camera.
+     */
+    public Camera getCamera() {
+	return camera;
+    }
 
-	/**
-	 * Get the scene's surfaces.
-	 */
-	public List<Surface> getSurfaces() {
-		return surfaces;
-	}
+    /**
+     * Get the scene's surfaces.
+     */
+    public List<Surface> getSurfaces() {
+	return surfaces;
+    }
 
-	/**
-	 * Set up scene for rendering.
-	 */
-	public void initialize() {
-		camera.initialize();
-	}
+    /**
+     * Set up scene for rendering.
+     */
+    public void initialize() {
+	camera.initialize();
+    }
 }
