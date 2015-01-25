@@ -8,7 +8,7 @@ import ray.math.Ray;
 import ray.math.Vector;
 import ray.surface.Surface;
 
-public class Glazed extends Lambertian{
+public class Glazed implements Shader{
 	// These fields are read in from the input file.
 	/** The color of the surface. */
 	protected final Color diffuseColor = new Color(1, 1, 1);
@@ -28,23 +28,32 @@ public class Glazed extends Lambertian{
 		Vector v=new Vector(intersectPt.sub(scene.getCamera().viewPoint)).normalize();
 		Vector r = n.scale((n.dot(v))*2).sub(v);
 
-		Color newColor = trace(new Ray(intersectPt,r),surface,scene);
-		
+		//	Color newColor = trace(new Ray(intersectPt,r),surface,scene);
+
 		for(Light light :scene.getLights()){
 
-			l.x = light.position.x - intersectPt.x; 
-			l.y = light.position.y - intersectPt.y;
-			l.z = light.position.z - intersectPt.z;
-
+			l=light.position.sub(intersectPt);
 			l.normalize();
 
-			output.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(n));
-			output.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(n));
-			output.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(n));
-		}
+			boolean flag=false;
+			Ray currentRay=new Ray(intersectPt,l);
+			for (Surface s:scene.getSurfaces()){
+				if (s!=surface)
+					if (s.intersects(currentRay)) {flag=true;break;} 
+			}
+			if (!flag){
+				output.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(n));
+				output.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(n));
+				output.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(n));
+			}
+			else {
+				output.x  += 0.1*diffuseColor.x * light.color.x * Math.max(0, l.dot(n));
+				output.y  += 0.1*diffuseColor.y * light.color.y * Math.max(0, l.dot(n));
+				output.z  += 0.1*diffuseColor.z * light.color.z * Math.max(0, l.dot(n));
 
-		//        return diffuseColor.clamp(0, 1);
-		return output.add(newColor);
+			}
+		}
+		return output.add(AMBIENT_LIGHT_COLOR.scale(0.05));
 	}
 
 	private Color trace(Ray ray, Surface surface,Scene scene) {
@@ -71,7 +80,7 @@ public class Glazed extends Lambertian{
 
 		if (closest == null) {
 			return new Color();
-//					surface.getShader().shade(ray.evaluate(tmin), surface, scene);
+			//					surface.getShader().shade(ray.evaluate(tmin), surface, scene);
 		} else {
 
 			return closest.getShader()

@@ -39,25 +39,25 @@ public class Lambertian implements Shader {
 		
 		for(Light light :scene.getLights()){
 
-		        l=light.position.sub(intersectPt);
+			l=light.position.sub(intersectPt);
 			l.normalize();
-			
+
 			boolean flag=false;
 			Ray currentRay=new Ray(intersectPt,l);
 			for (Surface s:scene.getSurfaces()){
-			    if (s!=surface)
-			    if (s.intersects(currentRay)) {flag=true;break;} 
+				if (s!=surface)
+					if (s.intersects(currentRay)) {flag=true;break;} 
 			}
 			if (!flag){
-			output.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
-			output.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
-			output.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
+				output.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
+				output.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
+				output.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
 			}
 			else {
-			output.x  += 0.1*diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
-			output.y  += 0.1*diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
-			output.z  += 0.1*diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
-				
+				output.x  += 0.1*diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
+				output.y  += 0.1*diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
+				output.z  += 0.1*diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
+
 			}
 		}
 
