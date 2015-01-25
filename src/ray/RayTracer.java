@@ -178,10 +178,8 @@ public class RayTracer {
 		}
 
 		if (closest == null) {
-			// System.out.println("HIT NULL");
 			return BACKGROUND_COLOR;
 		} else {
-			// System.out.println(ray.evaluate(tmin));
 			return closest.getShader()
 					.shade(ray.evaluate(tmin), closest, scene);
 		}
