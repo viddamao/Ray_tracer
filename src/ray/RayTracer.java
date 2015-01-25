@@ -2,6 +2,8 @@ package ray;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.util.List;
+
 import ray.gui.Image;
 import ray.gui.Parser;
 import ray.math.Color;
@@ -157,12 +159,30 @@ public class RayTracer {
      */
     private Color trace (Ray ray) {
         // TODO: complete this method, you may want to add parameters to it if you implement recursion
+    	
         Surface closest = null;
         double tmin = Double.MAX_VALUE;
+        
+        for(Surface s: this.scene.getSurfaces()){
+        	if(s.intersects(ray)){
+        		double[] tvals = s.getIntersection(ray);
+        		if(tvals.length == 1 && tmin>= tvals[0]){
+        			tmin = tvals[0];
+        			closest = s;
+        		}
+        		if(tvals.length ==2 && tmin >=Math.min(tvals[0], tvals[1]) ){
+        			tmin = Math.min(tvals[0], tvals[1]);
+        			closest = s;
+        		}
+        	}
+        }
         if (closest == null) {
             return BACKGROUND_COLOR;
         } else {
+//        	System.out.println(ray.evaluate(tmin));
             return closest.getShader().shade(ray.evaluate(tmin), closest, scene);
         }
     }
+    
+
 }

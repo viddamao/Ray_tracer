@@ -26,22 +26,22 @@ public class SphereMath {
 				-2*(center.x*start.x+center.y*start.y+center.z*start.z)- radius*radius;
 	}
 
-	public static double plusCal(double a, double b, double c){
+	private static double plusCal(double a, double b, double c){
 		return (-b + Math.sqrt(((b*b)-(4*a*c))))/ (2*a);
 	}
 
-	public static double minusCal(double a, double b, double c){
+	private static double minusCal(double a, double b, double c){
 		return (-b - Math.sqrt(((b*b)-(4*a*c))))/ (2*a);
 	}
 
 	public static double [] getT (double a, double b, double c){
 
-		if(((b*b)-(4*a*c)) < 0) return null;
+		if(((b*b)-(4*a*c)) < 0) return new double[0];
 
 		double p = plusCal(a,b,c);
 		double m = minusCal(a,b,c);
 
-		if( p < 0 && m < 0) return null; // if both neg
+		if( p < 0 && m < 0) return new double[0]; // if both neg
 
 		if( p >= 0 && m < 0){  //if m is neg
 			double [] tVal = new double [1];
@@ -67,17 +67,6 @@ public class SphereMath {
 		return tVal;
 	}
 
-	public static double [] calIntersect(double[] tvals, Point start, double dx, double dy, double dz){
-		double [] coord = new double[3];
-		for(double t : tvals){
-			coord[0] = start.x+t*dx;
-			coord[1] = start.x+t*dy;
-			coord[2] = start.x+t*dz;
-		}
-
-		return coord;
-	}
-	
 	public static Vector getNormal(Point p, Point center, double radius){
 		Vector normal = new Vector();
 		

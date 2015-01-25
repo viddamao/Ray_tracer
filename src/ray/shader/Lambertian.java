@@ -1,8 +1,12 @@
 package ray.shader;
 
+import java.util.List;
+
+import ray.Light;
 import ray.Scene;
 import ray.math.Color;
 import ray.math.Point;
+import ray.math.Vector;
 import ray.surface.Surface;
 
 
@@ -27,6 +31,12 @@ public class Lambertian implements Shader {
     @Override
     public Color shade (Point intersectPt, Surface surface, Scene scene) {
         // TODO: calculate the intensity of the light along this ray
+    	Vector normal = surface.getNormal(intersectPt);
+    	List<Light> lightList = scene.getLights();
+    	for(Light l :lightList){
+    		
+    	}
+    	
         return diffuseColor;
     }
 }
