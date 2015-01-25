@@ -8,6 +8,12 @@ import ray.math.Ray;
 import ray.math.Vector;
 import ray.surface.Surface;
 
+/**
+ * 
+ * @author Wei , Wenjun
+ *
+ */
+
 public class Glazed implements Shader {
 	// These fields are read in from the input file.
 	/** The color of the surface. */

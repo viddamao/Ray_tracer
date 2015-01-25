@@ -13,7 +13,7 @@ import ray.surface.Surface;
 /**
  * The RayTracer class ties everything else together.
  *
- * @author YOUR NAME HERE
+ * @author Wei
  */
 public class RayTracer {
     public static final Color BACKGROUND_COLOR = new Color();

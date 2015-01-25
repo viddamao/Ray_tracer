@@ -6,6 +6,11 @@ import org.junit.Test;
 
 import ray.surface.Sphere;
 
+/**
+ * 
+ * @author Wenjun
+ *
+ */
 public class SphereTest {
 
     @Test

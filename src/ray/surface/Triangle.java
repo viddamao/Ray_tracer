@@ -7,6 +7,12 @@ import ray.math.Ray;
 import ray.math.TriangleMath;
 import ray.math.Vector;
 
+/**
+ * 
+ * @author Wei
+ *
+ */
+
 public class Triangle extends Surface {
     // These fields are read in from the input file.
     /* These points are the vertices of the triangle */

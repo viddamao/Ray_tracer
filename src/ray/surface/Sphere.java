@@ -8,7 +8,7 @@ import ray.math.Vector;
 /**
  * Represents a sphere as a center and a radius.
  *
- * @author Wei Chen
+ * @author Wei , Wenjun
  */
 public class Sphere extends Surface {
     // These fields are read in from the input file.

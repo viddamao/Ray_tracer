@@ -2,6 +2,12 @@ package ray.math;
 
 import java.util.HashMap;
 
+/**
+ * 
+ * @author Wei
+ *
+ */
+
 public class TriangleMath {
 
     public static HashMap<String, Double> getMap(Point start, Vector direction,
