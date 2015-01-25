@@ -13,7 +13,7 @@ import ray.surface.Surface;
 /**
  * A Lambertian material scatters light equally in all directions.
  *
- * @author YOUR NAME HERE
+ * @author Wei
  */
 public class Lambertian implements Shader {
 	// These fields are read in from the input file.

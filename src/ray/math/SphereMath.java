@@ -2,7 +2,7 @@ package ray.math;
 
 /**
  * 
- * @author Wei
+ * @author Wei,Wenjun
  *
  */
 
