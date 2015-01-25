@@ -6,6 +6,7 @@ import ray.Light;
 import ray.Scene;
 import ray.math.Color;
 import ray.math.Point;
+import ray.math.Ray;
 import ray.math.Vector;
 import ray.surface.Surface;
 
@@ -13,7 +14,7 @@ import ray.surface.Surface;
 /**
  * A Lambertian material scatters light equally in all directions.
  *
- * @author YOUR NAME HERE
+ * @author Wei
  */
 public class Lambertian implements Shader {
 	// These fields are read in from the input file.
@@ -38,18 +39,29 @@ public class Lambertian implements Shader {
 		
 		for(Light light :scene.getLights()){
 
-			l.x += light.position.x - intersectPt.x; 
-			l.y += light.position.y - intersectPt.y;
-			l.z += light.position.z - intersectPt.z;
-
+		        l=light.position.sub(intersectPt);
 			l.normalize();
-
+			
+			boolean flag=false;
+			Ray currentRay=new Ray(intersectPt,l);
+			for (Surface s:scene.getSurfaces()){
+			    if (s!=surface)
+			    if (s.intersects(currentRay)) {flag=true;break;} 
+			}
+			if (!flag){
 			output.x  += diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
 			output.y  += diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
 			output.z  += diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
+			}
+			else {
+			output.x  += 0.1*diffuseColor.x * light.color.x * Math.max(0, l.dot(normal));
+			output.y  += 0.1*diffuseColor.y * light.color.y * Math.max(0, l.dot(normal));
+			output.z  += 0.1*diffuseColor.z * light.color.z * Math.max(0, l.dot(normal));
+				
+			}
 		}
 
 		//        return diffuseColor.clamp(0, 1);
-		return output;
+		return output.add(AMBIENT_LIGHT_COLOR.scale(0.05));
 	}
 }

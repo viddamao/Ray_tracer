@@ -15,7 +15,7 @@ import ray.surface.Surface;
  * Note, all specular materials also contain some diffuse reflection, so extend
  * that shader to include it in the calculation.
  *
- * @author YOUR NAME HERE
+ * @author Wenjun
  */
 public class Phong extends Lambertian {
 	// These fields are read in from the input file.
@@ -71,6 +71,6 @@ public class Phong extends Lambertian {
 		}
 
 
-		return output;
+		return output.add(AMBIENT_LIGHT_COLOR.scale(0.05));
 	}
 }
