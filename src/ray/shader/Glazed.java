@@ -88,8 +88,7 @@ public class Glazed implements Shader {
 	    }
 
 	if (closest == null) {
-	    return new Color();
-	    // surface.getShader().shade(ray.evaluate(tmin), surface, scene);
+	    return  surface.getShader().shade(ray.evaluate(0), surface, scene);
 	} else {
 
 	    return closest.getShader()
